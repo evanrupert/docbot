@@ -19,20 +19,31 @@
        parser/extract-function-names
        distinct))
 
+(defn- format-docs-into-string
+  [function-list]
+  (->> function-list
+       (map (comp format/format-function-data get-meta))
+       (string/join "\n\n")))
+
 (defn send-function-docs
   [channel thread code-snippet]
   (let [function-list (parse-and-extract-function-names code-snippet)]
     (when (not (empty? function-list))
-      (->> function-list
-           (map (comp format/format-function-data get-meta))
-           (string/join "\n\n")
-           (post-reply channel thread)))))
+      (post-reply channel thread (format-docs-into-string function-list)))))
 
 (defn event-handler
   [event]
   (let [code-snippet (parser/extract-code (:text event))]
     (when code-snippet
       (send-function-docs (:channel event) (:ts event) code-snippet))))
+
+(defn command-handler
+  [command-data]
+  (let [code-snippet (str "(" (get command-data "text") ")")
+        function-list (parse-and-extract-function-names code-snippet)]
+    (if (not (empty? function-list))
+      (format-docs-into-string function-list)
+      "That is not a valid function name")))
 
 ; TODO: Ignore unparsable clojure code
 ; TODO: Post replies to post with docs and link to doc website
@@ -51,4 +62,4 @@
 
 (defn -main
   [& args]
-  (start-app event-handler))
+  (start-app event-handler command-handler))
