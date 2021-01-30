@@ -32,13 +32,3 @@
       handle-requests
       (wrap-json-body {:keywords? true})
       (run-jetty {:port 3000})))
-
-;(defn wrap-challenge
-;  [event-handler]
-;  (fn [req]
-;    (if (challenge? req)
-;      (accept-challenge req)
-;      (do
-;        (if (not (bot? req))
-;          (event-handler req))
-;        {:status 200}))))

@@ -6,6 +6,13 @@
   [event]
   (post-message (:channel event) (:text event)))
 
+; TODO: Implement regex to determine if snippet has code in it
+; TODO: Maybe determine if code is clojure?
+; TODO: Extract functions from clojure code
+; TODO: Post replies to post with docs and link to doc website
+; TODO:   if post is OG then post in replies
+; TODO:   if post itself is reply, post beneath it
+
 (defn -main
   [& args]
   (start-app event-handler))
