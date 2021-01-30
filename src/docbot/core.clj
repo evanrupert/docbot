@@ -1,6 +1,11 @@
-(ns docbot.core)
+(ns docbot.core
+  (:require [docbot.slack.listener :refer [start-app]]
+            [docbot.slack.sending :refer [post-message]]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn event-handler
+  [event]
+  (post-message (:channel event) (:text event)))
+
+(defn -main
+  [& args]
+  (start-app event-handler))
