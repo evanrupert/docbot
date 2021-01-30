@@ -16,7 +16,8 @@
   (->> code-snippet
        format/replace-escaped-characters
        read-string
-       parser/extract-function-names))
+       parser/extract-function-names
+       distinct))
 
 (defn send-function-docs
   [channel thread code-snippet]
