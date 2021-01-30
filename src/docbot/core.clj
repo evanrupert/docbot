@@ -14,7 +14,7 @@
 (defn send-function-docs
   [channel thread code-snippet]
   (->> code-snippet
-       parser/replace-escaped-characters
+       format/replace-escaped-characters
        read-string
        parser/extract-function-names
        (map (comp format/format-function-data get-meta))
@@ -36,6 +36,7 @@
 ; TODO: Support single-line code snippets
 ; TODO: Ignore non-clojure code snippets without error
 ; TODO: Also provide documentation for macros
+; TODO: Strip newlines from doc strings
 
 ; Notes
 ; determine if code block is clojure code by attempting a
