@@ -1,13 +1,13 @@
 (ns docbot.slack.sending
   (:require [clj-http.client :as http]))
 
-(def api-key
+(def ^:private api-key
   (System/getenv "DOCBOT_SLACK_API_KEY"))
 
-(def base-url
+(def ^:private base-url
   "https://slack.com/api")
 
-(defn post
+(defn- post
   [url body]
   (http/post url
              {:headers      {"Authorization" (str "Bearer " api-key)}

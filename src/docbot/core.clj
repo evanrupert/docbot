@@ -13,6 +13,10 @@
 ; TODO:   if post is OG then post in replies
 ; TODO:   if post itself is reply, post beneath it
 
+; Notes
+; determine if code block is clojure code by attempting a
+; read-string and seeing if it fails
+
 (defn -main
   [& args]
   (start-app event-handler))

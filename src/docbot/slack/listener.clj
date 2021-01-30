@@ -2,29 +2,34 @@
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.json :refer [wrap-json-body]]))
 
-(defn challenge?
+(defn- challenge?
   [req]
   (contains? (:body req) :challenge))
 
-(defn accept-challenge
+(defn- accept-challenge
   [req]
   {:status       200
    :content-type "text/plain"
    :body         (get-in req [:body :challenge])})
 
-(defn bot?
+(defn- bot?
   [req]
   (not (nil? (get-in req [:body :event :bot_id]))))
 
-(defn handle-requests
+(defn- handle-requests
   [event-handler]
   (fn [req]
     (cond
-      (challenge? req) (accept-challenge req)
-      (bot? req) {:status 200}
-      :else (do
-              (event-handler (get-in req [:body :event]))
-              {:status 200}))))
+      (challenge? req) (do
+                         (println "Received Challenge, accepting...")
+                         (accept-challenge req))
+      (bot? req)       (do
+                         (println "Received Message From bot, ignoring...")
+                         {:status 200})
+      :else            (do
+                         (println "Received Message, sending to event handler...")
+                         (event-handler (get-in req [:body :event]))
+                         {:status 200}))))
 
 (defn start-app
   [event-handler]
