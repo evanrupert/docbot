@@ -24,15 +24,16 @@
                          (println "Received Challenge, accepting...")
                          (accept-challenge req))
       (bot? req)       (do
-                         (println "Received Message From bot, ignoring...")
+                         (println "Received Message From bot, no action...")
                          {:status 200})
       :else            (do
-                         (println "Received Message, sending to event handler...")
+                         (println "Received Message from user, forwarding to event handler...")
                          (event-handler (get-in req [:body :event]))
                          {:status 200}))))
 
 (defn start-app
   [event-handler]
+  (println "Starting event listener...")
   (-> event-handler
       handle-requests
       (wrap-json-body {:keywords? true})

@@ -1,4 +1,4 @@
-(ns docbot.slack.sending
+(ns docbot.slack.sender
   (:require [clj-http.client :as http]))
 
 (def ^:private api-key
@@ -19,5 +19,11 @@
   [channel msg]
   (post (str base-url "/chat.postMessage")
         {:channel channel
-         :text    msg})
-  {:status 200})
+         :text    msg}))
+
+(defn post-reply
+  [channel thread msg]
+  (post (str base-url "/chat.postMessage")
+        {:channel   channel
+         :thread_ts thread
+         :text      msg}))
