@@ -36,7 +36,6 @@
     arglists  :arglists
     doc       :doc
     namespace :ns}]
-  (println (.toString namespace))
   (let [quoted-doc   (string/replace doc "\n" "\n> ")
         link-url     (build-link-url namespace name)]
     (str "<" link-url "|*" name "*" ">\n"

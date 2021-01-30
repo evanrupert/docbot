@@ -11,15 +11,21 @@
        "  [req]\n"
        "  (not (nil? (get-in req [:body :event :bot_id]))))\n"))
 
-(defn send-function-docs
-  [channel thread code-snippet]
+(defn- parse-and-extract-function-names
+  [code-snippet]
   (->> code-snippet
        format/replace-escaped-characters
        read-string
-       parser/extract-function-names
-       (map (comp format/format-function-data get-meta))
-       (string/join "\n\n")
-       (post-reply channel thread)))
+       parser/extract-function-names))
+
+(defn send-function-docs
+  [channel thread code-snippet]
+  (let [function-list (parse-and-extract-function-names code-snippet)]
+    (when (not (empty? function-list))
+      (->> function-list
+           (map (comp format/format-function-data get-meta))
+           (string/join "\n\n")
+           (post-reply channel thread)))))
 
 (defn event-handler
   [event]
@@ -27,7 +33,7 @@
     (when code-snippet
       (send-function-docs (:channel event) (:ts event) code-snippet))))
 
-; TODO: Do not post if there are no functions to define
+; TODO: Ignore unparsable clojure code
 ; TODO: Post replies to post with docs and link to doc website
 ; TODO:   if post is OG then post in replies
 ; TODO:   if post itself is reply, post beneath it
