@@ -5,10 +5,6 @@
 (def ^:private code-snippet-regex
   #"(?ms).*```(.*)```.*")
 
-(defn has-code-snippet?
-  [text]
-  (re-matches code-snippet-regex text))
-
 (defn extract-code
   [text]
   (get (re-matches code-snippet-regex text) 1))

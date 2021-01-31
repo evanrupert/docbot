@@ -9,14 +9,6 @@
       (string/replace "&gt;" ">")
       (string/replace "&amp;" "&")))
 
-(defn escape-reserved-characters
-  "Replace <, >, & with their escape counterparts"
-  [text]
-  (-> text
-      (string/replace "<" "&lt;")
-      (string/replace ">" "&gt;")
-      (string/replace "&" "&amp;")))
-
 (def ^:private clojure-docs-base-url
   "https://clojuredocs.org/")
 

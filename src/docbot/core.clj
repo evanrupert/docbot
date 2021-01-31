@@ -6,11 +6,6 @@
             [docbot.format :as format]
             [clojure.string :as string]))
 
-(def test-code
-  (str "(defn- bot?\n"
-       "  [req]\n"
-       "  (not (nil? (get-in req [:body :event :bot_id]))))\n"))
-
 (defn- parse-and-extract-function-names
   [code-snippet]
   (->> code-snippet
@@ -39,13 +34,13 @@
 
 (defn command-handler
   [command-data]
-  (let [code-snippet (str "(" (get command-data "text") ")")
+  (let [code-snippet  (str "(" (get command-data "text") ")")
         function-list (parse-and-extract-function-names code-snippet)]
     (if (not (empty? function-list))
       (format-docs-into-string function-list)
       "That is not a valid function name")))
 
-; TODO: Ignore unparsable clojure code
+; TODO: parse multiple code snippets, not just first one
 ; TODO: Post replies to post with docs and link to doc website
 ; TODO:   if post is OG then post in replies
 ; TODO:   if post itself is reply, post beneath it
