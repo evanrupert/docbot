@@ -8,12 +8,6 @@
   [req]
   (contains? (:body req) :challenge))
 
-(defn- accept-challenge
-  [req]
-  {:status  200
-   :headers {"Content-Type" "application/json"}
-   :body    (get-in req [:body :challenge])})
-
 (defn- bot?
   [req]
   (not (nil? (get-in req [:body :event :bot_id]))))
@@ -22,10 +16,15 @@
   [req]
   (= "/command" (:uri req)))
 
-(defn- handle-requests
+(defn- accept-challenge
+  [req]
+  {:status  200
+   :headers {"Content-Type" "application/json"}
+   :body    (get-in req [:body :challenge])})
+
+(defn- create-request-handler
   [event-handler command-handler]
   (fn [req]
-    (println req)
     (cond
       (command? req)   (do
                          (println "Received Command Message, forwarding to command handler...")
@@ -49,7 +48,7 @@
 (defn start-app
   [event-handler command-handler]
   (println "Starting event listener...")
-  (-> (handle-requests event-handler command-handler)
+  (-> (create-request-handler event-handler command-handler)
       (wrap-json-body {:keywords? true})
       wrap-params
       (run-jetty {:port 3000})))

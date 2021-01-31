@@ -40,21 +40,6 @@
       (format-docs-into-string function-list)
       "That is not a valid function name")))
 
-; TODO: parse multiple code snippets, not just first one
-; TODO: Post replies to post with docs and link to doc website
-; TODO:   if post is OG then post in replies
-; TODO:   if post itself is reply, post beneath it
-
-; Streach
-; TODO: Support single-line code snippets
-; TODO: Ignore non-clojure code snippets without error
-; TODO: Also provide documentation for macros
-; TODO: Strip newlines from doc strings
-
-; Notes
-; determine if code block is clojure code by attempting a
-; read-string and seeing if it fails
-
 (defn -main
   [& args]
   (start-app event-handler command-handler))
